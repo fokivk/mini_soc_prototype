@@ -1,0 +1,176 @@
+# Mini SOC Project .gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+alerts/
+*.pcap
+*.pcapng
+
+# Docker
+.dockerignore
+
+# Suricata
+suricata.log
+fast.log
+eve.json
+unified2.alert
+stats.log
+
+# Zeek
+zeek.log
+*.log
+*.log.gz
+*.log.bro
+*.log.zeek
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Configuration backups
+*.conf.bak
+*.yaml.bak
+*.yml.bak
+
+# Test files
+test_*.py
+*_test.py
+tests/
+
+# Documentation
+docs/_build/
+docs/build/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# Mini SOC specific
+# Alert files (contain sensitive data)
+alerts/fast.log
+alerts/eve.json
+alerts/suricata.log
+alerts/zeek.log
+alerts/http_requests.log
+
+# Log files
+logs/mini_soc.log
+
+# Docker volumes
+docker-volumes/
+
+# Backup files
+backup/
+*.backup
+
+# Test results
+test_results/
+coverage/
+.coverage
+htmlcov/
+
+# Security
+*.key
+*.pem
+*.crt
+*.p12
+secrets/
+secrets.yaml
+secrets.yml

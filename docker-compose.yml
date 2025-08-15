@@ -1,0 +1,77 @@
+services:
+  # Suricata IDS/IPS
+  suricata:
+    image: jasonish/suricata:latest
+    container_name: mini_soc_suricata
+    network_mode: host
+    volumes:
+      - ./suricata_config:/etc/suricata
+      - ./suricata_config/rules:/etc/suricata/rules
+      - ./alerts:/var/log/suricata
+    command: ["suricata", "-i", "eno1", "-c", "/etc/suricata/suricata.yaml", "-l", "/var/log/suricata", "-S", "/etc/suricata/rules/custom.rules"]
+    restart: unless-stopped
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+
+  # Zeek Network Security Monitor
+  zeek:
+    image: zeek/zeek:latest
+    container_name: mini_soc_zeek
+    network_mode: host
+    volumes:
+      - ./zeek_config:/usr/local/zeek/share/zeek/site
+      - ./alerts:/usr/local/zeek/logs
+    command: ["zeek", "-i", "eno1", "-C", "-b", "/usr/local/zeek/share/zeek/site/local.zeek", "-w", "/usr/local/zeek/logs/zeek.log"]
+    restart: unless-stopped
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+
+  # MySQL Database
+  mysql:
+    image: mysql:5.7
+    container_name: mini_soc_mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=dvwa
+      - MYSQL_USER=dvwa
+      - MYSQL_PASSWORD=p@ssw0rd
+    restart: unless-stopped
+
+  # Web Application สำหรับทดสอบการโจมตี
+  vulnerable_webapp:
+    image: vulnerables/web-dvwa:latest
+    container_name: mini_soc_webapp
+    ports:
+      - "8080:80"
+    environment:
+      - MYSQL_ROOT_PASS=password
+      - MYSQL_DB_NAME=dvwa
+      - MYSQL_USER=dvwa
+      - MYSQL_PASS=p@ssw0rd
+    depends_on:
+      - mysql
+    restart: unless-stopped
+
+  # Python Alert Monitor
+  alert_monitor:
+    build: .
+    container_name: mini_soc_monitor
+    volumes:
+      - ./alerts:/app/alerts
+      - ./logs:/app/logs
+      - ./scripts:/app/scripts
+    environment:
+      - INTERFACE=eno1
+    restart: unless-stopped
+    command: ["python", "/app/scripts/main.py"]
+    tty: true
+    stdin_open: true
+    network_mode: host
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW

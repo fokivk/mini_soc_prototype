@@ -1,0 +1,79 @@
+%YAML 1.1
+---
+# Suricata configuration file
+
+vars:
+  address-groups:
+    HOME_NET: "[192.168.0.0/16,10.0.0.0/8,172.16.0.0/12]"
+    EXTERNAL_NET: "!$HOME_NET"
+
+  port-groups:
+    HTTP_PORTS: "80,8080"
+    HTTPS_PORTS: "443"
+
+# Global stats configuration
+stats:
+  enabled: yes
+  interval: 8
+
+# Configure the type of alerting
+outputs:
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: eve.json
+      types:
+        - alert
+        - http
+        - dns
+        - tls
+        - flow
+        - netflow
+
+  - fast:
+      enabled: yes
+      filename: fast.log
+
+  - unified2-alert:
+      enabled: yes
+      filename: unified2.alert
+
+# Configure logging
+logging:
+  default-log-level: info
+  outputs:
+    - console:
+        enabled: yes
+    - file:
+        enabled: yes
+        filename: suricata.log
+
+# Configure the capture
+af-packet:
+  - interface: eno1
+    threads: auto
+    cluster-id: 99
+    cluster-type: cluster_flow
+    defrag: yes
+    use-mmap: yes
+    tpacket-v3: yes
+
+# Configure the app layer
+app-layer:
+  protocols:
+    http:
+      enabled: yes
+      libhtp:
+        default-config:
+          personality: IDS
+          request-body-limit: 0
+          response-body-limit: 0
+          request-body-inline: yes
+          response-body-inline: yes
+
+# Include custom rules
+rule-files:
+  - /etc/suricata/rules/custom.rules
+
+# Include threshold configuration
+threshold-file: /etc/suricata/threshold.config
